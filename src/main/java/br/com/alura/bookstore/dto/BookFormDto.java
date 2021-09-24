@@ -3,10 +3,7 @@ package br.com.alura.bookstore.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Getter
@@ -17,6 +14,7 @@ public class BookFormDto {
     @Size(min = 10)
     private String title;
 
+    @NotNull
     @PastOrPresent
     private LocalDate releaseDate;
 
