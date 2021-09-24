@@ -16,25 +16,19 @@ public class AuthorService {
 
     //hashmap acting as a database
     private final HashMap<Integer, Author> bdAuthors = new HashMap<>();
-    private final List<Author> authors = new ArrayList<>();
     private final ModelMapper modelMapper = new ModelMapper();
     private int id = 0;
 
     public List<AuthorDetailsDto> list() {
 
-        return authors.stream()
-                .map(a -> modelMapper.map(a, AuthorDetailsDto.class))
-                .collect(Collectors.toList());
+        List<Author> authors = new ArrayList<>(bdAuthors.values());
+        return authors.stream().map(a -> modelMapper.map(a, AuthorDetailsDto.class)).collect(Collectors.toList());
     }
 
     public void register(AuthorFormDto dto) {
 
         Author author = modelMapper.map(dto, Author.class);
-
         author.setId(id += 1);
-
-        authors.add(author);
-
         bdAuthors.put(author.getId(), author);
     }
 
