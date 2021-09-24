@@ -31,7 +31,6 @@ public class BookService {
     public void register(BookFormDto dto) {
 
         Book book = modelMapper.map(dto, Book.class);
-
         book.setId(id += 1);
         book.setAuthor(authorService.findAuthorById(dto.getIdAuthor()));
 
