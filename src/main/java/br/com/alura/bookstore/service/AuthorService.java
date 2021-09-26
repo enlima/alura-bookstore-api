@@ -35,4 +35,8 @@ public class AuthorService {
     public Author findAuthorById(Integer id) {
         return bdAuthors.get(id);
     }
+
+    public boolean authorExists(int idAuthor) {
+        return bdAuthors.containsKey(idAuthor);
+    }
 }
