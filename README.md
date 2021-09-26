@@ -85,7 +85,7 @@ __Rules__
 - Title field has a 10 characters minimum size;
 - Release Date field must not be a future date;
 - Pages field must be equal or greater than 100;
-- IdAuthor field must be from a already registered author.
+- IdAuthor field must be from an already registered author.
 ```
 
 # Get Books List
