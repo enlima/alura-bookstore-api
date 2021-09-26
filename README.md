@@ -1,5 +1,5 @@
 # alura-bookstore-api
-REST API project using Spring Boot to manage a bookstore. #WIP
+Bookstore management REST API using Spring Boot. #WIP
 
 
 # Registering an Author
