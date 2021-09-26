@@ -1,5 +1,7 @@
-# alura-bookstore-api
+# bookstore-api
 Bookstore management REST API using Spring Boot. #WIP
+
+Developed for [Alura](https://www.alura.com.br/)'s Java Bootcamp 2021.
 
 
 # Registering an Author
