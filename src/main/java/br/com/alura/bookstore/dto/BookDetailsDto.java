@@ -9,9 +9,9 @@ import java.time.LocalDate;
 @Setter
 public class BookDetailsDto {
 
-    private int id;
+    private Long id;
     private String title;
     private LocalDate publicationDate;
-    private int pages;
+    private Integer pages;
     private AuthorBasicsDto author;
 }

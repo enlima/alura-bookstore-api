@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class AuthorBasicsDto {
 
-    private int id;
+    private Long id;
     private String name;
 }

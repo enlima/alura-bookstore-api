@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Setter
 public class AuthorDetailsDto {
 
-    private int id;
+    private Long id;
     private String name;
     private String email;
     private LocalDate birthdate;

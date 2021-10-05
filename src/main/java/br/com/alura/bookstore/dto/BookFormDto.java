@@ -19,8 +19,8 @@ public class BookFormDto {
     private LocalDate publicationDate;
 
     @Min(100)
-    private int pages;
+    private Integer pages;
 
     @Min(1)
-    private int idAuthor;
+    private Long idAuthor;
 }
