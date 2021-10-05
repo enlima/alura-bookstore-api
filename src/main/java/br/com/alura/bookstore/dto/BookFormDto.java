@@ -16,7 +16,7 @@ public class BookFormDto {
 
     @NotNull
     @PastOrPresent
-    private LocalDate releaseDate;
+    private LocalDate publicationDate;
 
     @Min(100)
     private int pages;

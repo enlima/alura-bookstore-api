@@ -15,7 +15,7 @@ public class Book {
 
     private int id;
     private String title;
-    private LocalDate releaseDate;
+    private LocalDate publicationDate;
     private int pages;
     private Author author;
 }
