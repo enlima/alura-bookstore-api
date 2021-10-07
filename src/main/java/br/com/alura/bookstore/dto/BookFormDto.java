@@ -22,5 +22,5 @@ public class BookFormDto {
     private Integer pages;
 
     @Min(1)
-    private Long idAuthor;
+    private Long authorId;
 }
