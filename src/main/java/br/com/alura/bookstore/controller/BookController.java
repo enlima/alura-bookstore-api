@@ -27,7 +27,7 @@ public class BookController {
     @PostMapping
     public ResponseEntity register(@RequestBody @Valid BookFormDto dto, UriComponentsBuilder uriBuilder) {
 
-        if (authorService.authorExists(dto.getIdAuthor())) {
+        if (authorService.authorExists(dto.getAuthorId())) {
 
             BookDetailsDto bookDetailsDto = bookService.register(dto);
 

@@ -27,7 +27,7 @@ public class BookService {
 
         Book book = modelMapper.map(dto, Book.class);
         book.setId(null);
-        book.setAuthor(authorService.getAuthorById(dto.getIdAuthor()));
+        book.setAuthor(authorService.getAuthorById(dto.getAuthorId()));
 
         bookRepository.save(book);
 
