@@ -1,5 +1,6 @@
 package br.com.alura.bookstore.controller;
 
+import br.com.alura.bookstore.dto.AuthorStatsDto;
 import br.com.alura.bookstore.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,7 @@ public class ReportController {
     private ReportService reportServiceService;
 
     @GetMapping("/bookstore")
-    public List<?> reportInvestmentPortfolio() {
+    public List<AuthorStatsDto> reportInvestmentPortfolio() {
         return reportServiceService.reportBooksByAuthors();
     }
 }
