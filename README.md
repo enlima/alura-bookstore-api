@@ -151,7 +151,7 @@ __Request__
 
 __Response__
 
-```HttpStatus: 200```
+```Status: 200 OK```
 ```
 {
     "content": [
@@ -212,4 +212,38 @@ __Response__
     "number": 0,
     "empty": false
 }
+```
+
+# Get Bookstore Report (Author Stats)
+
+__Request__
+
+```GET /reports/bookstore```
+
+__Response__
+
+```Status: 200 OK```
+```
+[
+    {
+        "author": "Joaquim Maria Machado de Assis",
+        "totalBooks": 5,
+        "percentage": 45.45
+    },
+    {
+        "author": "Jane Austen",
+        "totalBooks": 3,
+        "percentage": 27.27
+    },
+    {
+        "author": "John Ronald Reuel Tolkien",
+        "totalBooks": 2,
+        "percentage": 18.18
+    },
+    {
+        "author": "Graciliano Ramos de Oliveira",
+        "totalBooks": 1,
+        "percentage": 9.09
+    }
+]
 ```
