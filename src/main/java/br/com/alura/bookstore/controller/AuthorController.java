@@ -21,7 +21,11 @@ public class AuthorController {
     private AuthorService authorService;
 
     @PostMapping
-    public ResponseEntity<AuthorDetailsDto> register(@RequestBody @Valid AuthorFormDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<?> register(@RequestBody @Valid AuthorFormDto dto, UriComponentsBuilder uriBuilder) {
+
+        if (authorService.authorExistsByName(dto.getName().trim())) {
+            return ResponseEntity.badRequest().body("The author you're trying to register already exists!");
+        }
 
         AuthorDetailsDto authorDetailsDto = authorService.register(dto);
 

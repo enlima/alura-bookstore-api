@@ -43,4 +43,8 @@ public class AuthorService {
     public boolean authorExists(Long id) {
         return authorRepository.existsById(id);
     }
+
+    public boolean authorExistsByName(String name) {
+        return authorRepository.existsByName(name);
+    }
 }
