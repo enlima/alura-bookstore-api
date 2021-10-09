@@ -25,18 +25,21 @@ public class BookController {
     private AuthorService authorService;
 
     @PostMapping
-    public ResponseEntity register(@RequestBody @Valid BookFormDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<?> register(@RequestBody @Valid BookFormDto dto, UriComponentsBuilder uriBuilder) {
 
-        if (authorService.authorExists(dto.getAuthorId())) {
+        if (bookService.bookExists(dto.getTitle().trim())) {
+            return ResponseEntity.badRequest().body("The book you're trying to register already exists!");
+        }
 
-            BookDetailsDto bookDetailsDto = bookService.register(dto);
-
-            URI uri = uriBuilder.path("/books/{id}").buildAndExpand(bookDetailsDto.getId()).toUri();
-
-            return ResponseEntity.created(uri).body(bookDetailsDto);
-        } else {
+        if (!authorService.authorExists(dto.getAuthorId())) {
             return ResponseEntity.badRequest().body("Author not found! Check for a valid author_id!");
         }
+
+        BookDetailsDto bookDetailsDto = bookService.register(dto);
+
+        URI uri = uriBuilder.path("/books/{id}").buildAndExpand(bookDetailsDto.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(bookDetailsDto);
     }
 
     @GetMapping

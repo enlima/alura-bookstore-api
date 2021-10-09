@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 
+    boolean existsByTitle(String title);
+
     @Query("SELECT new br.com.alura.bookstore.dto.AuthorStatsDto (a.name, COUNT(b.id), "
             + "ROUND((COUNT(b.id) * 100.0) / (SELECT COUNT(b2.id) FROM Book b2), 2)) "
             + "FROM Book b JOIN b.author a GROUP BY b.author")

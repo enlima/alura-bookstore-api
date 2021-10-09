@@ -39,4 +39,8 @@ public class BookService {
         Page<Book> books = bookRepository.findAll(paging);
         return books.map(b -> modelMapper.map(b, BookDetailsDto.class));
     }
+
+    public boolean bookExists(String title) {
+        return bookRepository.existsByTitle(title);
+    }
 }
