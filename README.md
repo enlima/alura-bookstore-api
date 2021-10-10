@@ -10,7 +10,7 @@ __Request__
 
 ```POST /authors```
 
-```
+```json
 {
     "name": "John Ronald Reuel Tolkien",
     "email": "tolkien@example.com",
@@ -22,7 +22,7 @@ __Request__
 __Response__
 
 ```Status: 201 Created```
-```
+```json
 {
     "id": 21,
     "name": "John Ronald Reuel Tolkien",
@@ -49,7 +49,7 @@ __Request__
 __Response__
 
 ```Status: 200 OK```
-```
+```json
 {
     "content": [
         {
@@ -108,7 +108,7 @@ __Request__
 
 ```POST /books```
 
-```
+```json
 {
     "title": "Pride and Prejudice",
     "publicationDate": "1813-01-28",
@@ -120,7 +120,7 @@ __Request__
 __Response__
 
 ```Status: 201 Created```
-```
+```json
 {
     "id": 25,
     "title": "Pride and Prejudice",
@@ -152,7 +152,7 @@ __Request__
 __Response__
 
 ```Status: 200 OK```
-```
+```json
 {
     "content": [
         {
@@ -223,7 +223,7 @@ __Request__
 __Response__
 
 ```Status: 200 OK```
-```
+```json
 [
     {
         "author": "Joaquim Maria Machado de Assis",
