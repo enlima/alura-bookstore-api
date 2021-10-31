@@ -2,7 +2,7 @@ package br.com.alura.bookstore.controller;
 
 import br.com.alura.bookstore.dto.AuthorDetailsDto;
 import br.com.alura.bookstore.dto.AuthorFormDto;
-import br.com.alura.bookstore.dto.UpdateAuthorFormDto;
+import br.com.alura.bookstore.dto.AuthorUpdateFormDto;
 import br.com.alura.bookstore.service.AuthorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,7 +57,7 @@ public class AuthorController {
 
     @PutMapping
     @ApiOperation("Update info about a specific author")
-    public ResponseEntity<AuthorDetailsDto> update(@RequestBody @Valid UpdateAuthorFormDto dto) {
+    public ResponseEntity<AuthorDetailsDto> update(@RequestBody @Valid AuthorUpdateFormDto dto) {
 
         AuthorDetailsDto detailsDto = authorService.update(dto);
 

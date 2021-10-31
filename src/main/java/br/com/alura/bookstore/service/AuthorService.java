@@ -2,7 +2,7 @@ package br.com.alura.bookstore.service;
 
 import br.com.alura.bookstore.dto.AuthorDetailsDto;
 import br.com.alura.bookstore.dto.AuthorFormDto;
-import br.com.alura.bookstore.dto.UpdateAuthorFormDto;
+import br.com.alura.bookstore.dto.AuthorUpdateFormDto;
 import br.com.alura.bookstore.model.Author;
 import br.com.alura.bookstore.repository.AuthorRepository;
 import org.modelmapper.ModelMapper;
@@ -46,7 +46,7 @@ public class AuthorService {
     }
 
     @Transactional
-    public AuthorDetailsDto update(UpdateAuthorFormDto dto) {
+    public AuthorDetailsDto update(AuthorUpdateFormDto dto) {
 
         Author author = authorRepository.getById(dto.getId());
         author.updateInfo(dto.getName(), dto.getEmail(), dto.getBirthdate(), dto.getMiniResume());

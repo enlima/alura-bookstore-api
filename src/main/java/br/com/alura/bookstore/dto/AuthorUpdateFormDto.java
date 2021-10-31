@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateAuthorFormDto extends AuthorFormDto {
+public class AuthorUpdateFormDto extends AuthorFormDto {
 
     @NotNull
     private Long id;
