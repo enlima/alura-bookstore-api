@@ -51,7 +51,7 @@ public class AuthorService {
     @Transactional
     public AuthorDetailsDto update(AuthorUpdateFormDto dto) {
 
-        Author author = authorRepository.getById(dto.getId());
+        Author author = getAuthorById(dto.getId());
 
         if (!author.getName().trim().equals(dto.getName().trim())) {
             checkIfAuthorAlreadyExists(dto.getName());
