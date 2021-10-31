@@ -44,7 +44,7 @@ public class AuthorService {
 
     public AuthorDetailsDto detail(Long id) {
 
-        Author author = authorRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Author author = getAuthorById(id);
         return modelMapper.map(author, AuthorDetailsDto.class);
     }
 
