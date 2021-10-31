@@ -7,6 +7,7 @@ import br.com.alura.bookstore.model.Author;
 import br.com.alura.bookstore.repository.AuthorRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ public class AuthorService {
 
     @Transactional
     public AuthorDetailsDto register(AuthorFormDto dto) {
+
+        checkIfAuthorAlreadyExists(dto.getName());
 
         Author author = modelMapper.map(dto, Author.class);
         author.setId(null);
@@ -49,18 +52,27 @@ public class AuthorService {
     public AuthorDetailsDto update(AuthorUpdateFormDto dto) {
 
         Author author = authorRepository.getById(dto.getId());
+
+        if (!author.getName().trim().equals(dto.getName().trim())) {
+            checkIfAuthorAlreadyExists(dto.getName());
+        }
+
         author.updateInfo(dto.getName(), dto.getEmail(), dto.getBirthdate(), dto.getMiniResume());
 
         return modelMapper.map(author, AuthorDetailsDto.class);
     }
 
+    public void checkIfAuthorAlreadyExists(String name) {
+
+        if (authorRepository.existsByName(name.trim())) {
+            throw new DataIntegrityViolationException("The author '" + name.trim() + "' already exists " +
+                    "associated with a different author ID!");
+        }
+    }
+
     public Author getAuthorById(Long id) {
         return authorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Informed author " +
                 "(ID: " + id + ") not found!"));
-    }
-
-    public boolean authorExistsByName(String name) {
-        return authorRepository.existsByName(name);
     }
 
     @Transactional
