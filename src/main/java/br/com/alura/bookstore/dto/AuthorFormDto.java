@@ -14,9 +14,11 @@ import java.time.LocalDate;
 public class AuthorFormDto {
 
     @NotBlank
+    @Size(max = 100)
     private String name;
 
     @NotBlank
+    @Size(max = 50)
     private String email;
 
     @NotNull

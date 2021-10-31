@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class BookFormDto {
 
     @NotBlank
-    @Size(min = 10)
+    @Size(min = 10, max = 100)
     private String title;
 
     @NotNull
