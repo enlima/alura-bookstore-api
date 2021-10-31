@@ -47,7 +47,7 @@ public class BookController {
     }
 
     @GetMapping
-    @ApiOperation("Books List")
+    @ApiOperation("List of books")
     public Page<BookDetailsDto> list(Pageable paging) {
         return bookService.list(paging);
     }

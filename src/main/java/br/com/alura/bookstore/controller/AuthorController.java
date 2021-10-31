@@ -39,7 +39,7 @@ public class AuthorController {
     }
 
     @GetMapping
-    @ApiOperation("Authors List")
+    @ApiOperation("List of authors")
     public Page<AuthorDetailsDto> list(Pageable paging) {
         return authorService.list(paging);
     }
