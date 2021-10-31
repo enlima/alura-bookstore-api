@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 public class BookService {
 
@@ -38,6 +40,12 @@ public class BookService {
 
         Page<Book> books = bookRepository.findAll(paging);
         return books.map(b -> modelMapper.map(b, BookDetailsDto.class));
+    }
+
+    public BookDetailsDto detail(Long id) {
+
+        Book book = bookRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return modelMapper.map(book, BookDetailsDto.class);
     }
 
     public boolean bookExists(String title) {

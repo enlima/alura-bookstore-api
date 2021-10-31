@@ -1,5 +1,6 @@
 package br.com.alura.bookstore.controller;
 
+import br.com.alura.bookstore.dto.AuthorDetailsDto;
 import br.com.alura.bookstore.dto.BookDetailsDto;
 import br.com.alura.bookstore.dto.BookFormDto;
 import br.com.alura.bookstore.service.AuthorService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 
 @RestController
@@ -50,5 +52,14 @@ public class BookController {
     @ApiOperation("List of books")
     public Page<BookDetailsDto> list(Pageable paging) {
         return bookService.list(paging);
+    }
+
+    @GetMapping("/{id}")
+    @ApiOperation("Consult a specific book")
+    public ResponseEntity<BookDetailsDto> detail(@PathVariable @NotNull Long id) {
+
+        BookDetailsDto detailsDto = bookService.detail(id);
+
+        return ResponseEntity.ok(detailsDto);
     }
 }
