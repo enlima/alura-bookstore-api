@@ -22,26 +22,26 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    public List<Http400Dto> handleStatus400(MethodArgumentNotValidException ex) {
+    public List<Http400Dto> httpStatus400(MethodArgumentNotValidException ex) {
         return ex.getFieldErrors().stream().map(error ->
                 new Http400Dto(error.getField(), error.getDefaultMessage())).collect(Collectors.toList());
     }
 
     @ExceptionHandler({EntityNotFoundException.class, EmptyResultDataAccessException.class})
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public String handleStatus404(Exception ex) {
+    public String httpStatus404(Exception ex) {
         return ex.getMessage();
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(code = HttpStatus.CONFLICT)
-    public Http409Dto handleStatus409(Exception ex, HttpServletRequest req) {
+    public Http409Dto httpStatus409(Exception ex, HttpServletRequest req) {
         return new Http409Dto(LocalDate.now(), ex.getClass().getName(), ex.getMessage(), req.getRequestURI());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    public Http500Dto handleStatus500(Exception ex, HttpServletRequest req) {
+    public Http500Dto httpStatus500(Exception ex, HttpServletRequest req) {
         return new Http500Dto(LocalDate.now(), ex.getClass().getName(), ex.getMessage(), req.getRequestURI());
     }
 }
