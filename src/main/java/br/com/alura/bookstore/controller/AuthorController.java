@@ -2,6 +2,7 @@ package br.com.alura.bookstore.controller;
 
 import br.com.alura.bookstore.dto.AuthorDetailsDto;
 import br.com.alura.bookstore.dto.AuthorFormDto;
+import br.com.alura.bookstore.dto.UpdateAuthorFormDto;
 import br.com.alura.bookstore.service.AuthorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 
 @RestController
@@ -42,5 +44,32 @@ public class AuthorController {
     @ApiOperation("List of authors")
     public Page<AuthorDetailsDto> list(Pageable paging) {
         return authorService.list(paging);
+    }
+
+    @GetMapping("/{id}")
+    @ApiOperation("Consult a specific author")
+    public ResponseEntity<AuthorDetailsDto> detail(@PathVariable @NotNull Long id) {
+
+        AuthorDetailsDto detailsDto = authorService.detail(id);
+
+        return ResponseEntity.ok(detailsDto);
+    }
+
+    @PutMapping
+    @ApiOperation("Update info about a specific author")
+    public ResponseEntity<AuthorDetailsDto> update(@RequestBody @Valid UpdateAuthorFormDto dto) {
+
+        AuthorDetailsDto detailsDto = authorService.update(dto);
+
+        return ResponseEntity.ok(detailsDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation("Delete an author")
+    public ResponseEntity<?> delete(@PathVariable @NotNull Long id) {
+
+        authorService.delete(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

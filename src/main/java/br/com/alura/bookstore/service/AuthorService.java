@@ -2,6 +2,7 @@ package br.com.alura.bookstore.service;
 
 import br.com.alura.bookstore.dto.AuthorDetailsDto;
 import br.com.alura.bookstore.dto.AuthorFormDto;
+import br.com.alura.bookstore.dto.UpdateAuthorFormDto;
 import br.com.alura.bookstore.model.Author;
 import br.com.alura.bookstore.repository.AuthorRepository;
 import org.modelmapper.ModelMapper;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityNotFoundException;
 
 @Service
 public class AuthorService {
@@ -36,6 +39,21 @@ public class AuthorService {
         return authors.map(a -> modelMapper.map(a, AuthorDetailsDto.class));
     }
 
+    public AuthorDetailsDto detail(Long id) {
+
+        Author author = authorRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return modelMapper.map(author, AuthorDetailsDto.class);
+    }
+
+    @Transactional
+    public AuthorDetailsDto update(UpdateAuthorFormDto dto) {
+
+        Author author = authorRepository.getById(dto.getId());
+        author.updateInfo(dto.getName(), dto.getEmail(), dto.getBirthdate(), dto.getMiniResume());
+
+        return modelMapper.map(author, AuthorDetailsDto.class);
+    }
+
     public Author getAuthorById(Long id) {
         return authorRepository.getById(id);
     }
@@ -46,5 +64,10 @@ public class AuthorService {
 
     public boolean authorExistsByName(String name) {
         return authorRepository.existsByName(name);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        authorRepository.deleteById(id);
     }
 }

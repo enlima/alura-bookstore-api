@@ -26,4 +26,11 @@ public class Author {
     private String email;
     private LocalDate birthdate;
     private String miniResume;
+
+    public void updateInfo(String name, String email, LocalDate birthdate, String miniResume) {
+        this.name = name;
+        this.email = email;
+        this.birthdate = birthdate;
+        this.miniResume = miniResume;
+    }
 }
