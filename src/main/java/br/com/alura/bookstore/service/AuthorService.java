@@ -55,11 +55,8 @@ public class AuthorService {
     }
 
     public Author getAuthorById(Long id) {
-        return authorRepository.getById(id);
-    }
-
-    public boolean authorExists(Long id) {
-        return authorRepository.existsById(id);
+        return authorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Informed author " +
+                "(ID: " + id + ") not found!"));
     }
 
     public boolean authorExistsByName(String name) {

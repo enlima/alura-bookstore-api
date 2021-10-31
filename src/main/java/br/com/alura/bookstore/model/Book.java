@@ -25,4 +25,11 @@ public class Book {
 
     @ManyToOne
     private Author author;
+
+    public void updateInfo(String title, LocalDate publicationDate, Integer pages, Author author) {
+        this.title = title;
+        this.publicationDate = publicationDate;
+        this.pages = pages;
+        this.author = author;
+    }
 }

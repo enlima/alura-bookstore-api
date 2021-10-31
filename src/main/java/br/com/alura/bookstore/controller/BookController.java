@@ -1,8 +1,8 @@
 package br.com.alura.bookstore.controller;
 
-import br.com.alura.bookstore.dto.AuthorDetailsDto;
 import br.com.alura.bookstore.dto.BookDetailsDto;
 import br.com.alura.bookstore.dto.BookFormDto;
+import br.com.alura.bookstore.dto.BookUpdateFormDto;
 import br.com.alura.bookstore.service.AuthorService;
 import br.com.alura.bookstore.service.BookService;
 import io.swagger.annotations.Api;
@@ -33,14 +33,6 @@ public class BookController {
     @ApiOperation("Register new book")
     public ResponseEntity<?> register(@RequestBody @Valid BookFormDto dto, UriComponentsBuilder uriBuilder) {
 
-        if (bookService.bookExists(dto.getTitle().trim())) {
-            return ResponseEntity.badRequest().body("The book you're trying to register already exists!");
-        }
-
-        if (!authorService.authorExists(dto.getAuthorId())) {
-            return ResponseEntity.badRequest().body("Author not found! Check for a valid author_id!");
-        }
-
         BookDetailsDto bookDetailsDto = bookService.register(dto);
 
         URI uri = uriBuilder.path("/books/{id}").buildAndExpand(bookDetailsDto.getId()).toUri();
@@ -61,5 +53,23 @@ public class BookController {
         BookDetailsDto detailsDto = bookService.detail(id);
 
         return ResponseEntity.ok(detailsDto);
+    }
+
+    @PutMapping
+    @ApiOperation("Update info about a specific book")
+    public ResponseEntity<?> update(@RequestBody @Valid BookUpdateFormDto dto) {
+
+        BookDetailsDto detailsDto = bookService.update(dto);
+
+        return ResponseEntity.ok(detailsDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation("Delete a book")
+    public ResponseEntity<?> delete(@PathVariable @NotNull Long id) {
+
+        bookService.delete(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

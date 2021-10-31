@@ -2,10 +2,13 @@ package br.com.alura.bookstore.service;
 
 import br.com.alura.bookstore.dto.BookDetailsDto;
 import br.com.alura.bookstore.dto.BookFormDto;
+import br.com.alura.bookstore.dto.BookUpdateFormDto;
+import br.com.alura.bookstore.model.Author;
 import br.com.alura.bookstore.model.Book;
 import br.com.alura.bookstore.repository.BookRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,8 @@ public class BookService {
     @Transactional
     public BookDetailsDto register(BookFormDto dto) {
 
+        checkIfBookAlreadyExists(dto.getTitle());
+
         Book book = modelMapper.map(dto, Book.class);
         book.setId(null);
         book.setAuthor(authorService.getAuthorById(dto.getAuthorId()));
@@ -44,11 +49,40 @@ public class BookService {
 
     public BookDetailsDto detail(Long id) {
 
-        Book book = bookRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Book book = getBookById(id);
         return modelMapper.map(book, BookDetailsDto.class);
     }
 
-    public boolean bookExists(String title) {
-        return bookRepository.existsByTitle(title);
+    @Transactional
+    public BookDetailsDto update(BookUpdateFormDto dto) {
+
+        Book book = getBookById(dto.getId());
+
+        if (!book.getTitle().trim().equals(dto.getTitle().trim())) {
+            checkIfBookAlreadyExists(dto.getTitle());
+        }
+
+        Author author = authorService.getAuthorById(dto.getAuthorId());
+        book.updateInfo(dto.getTitle(), dto.getPublicationDate(), dto.getPages(), author);
+
+        return modelMapper.map(book, BookDetailsDto.class);
+    }
+
+    public void checkIfBookAlreadyExists(String title) {
+
+        if (bookRepository.existsByTitle(title.trim())) {
+            throw new DataIntegrityViolationException("The book title '" + title.trim() + "' already exists " +
+                    "associated with a different book ID!");
+        }
+    }
+
+    public Book getBookById(Long id) {
+        return bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Informed book " +
+                "(ID: " + id + ") not found!"));
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        bookRepository.deleteById(id);
     }
 }
