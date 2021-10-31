@@ -3,6 +3,8 @@ package br.com.alura.bookstore.controller;
 import br.com.alura.bookstore.dto.AuthorDetailsDto;
 import br.com.alura.bookstore.dto.AuthorFormDto;
 import br.com.alura.bookstore.service.AuthorService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,12 +17,14 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/authors")
+@Api(tags = "Author")
 public class AuthorController {
 
     @Autowired
     private AuthorService authorService;
 
     @PostMapping
+    @ApiOperation("Register new author")
     public ResponseEntity<?> register(@RequestBody @Valid AuthorFormDto dto, UriComponentsBuilder uriBuilder) {
 
         if (authorService.authorExistsByName(dto.getName().trim())) {
@@ -35,6 +39,7 @@ public class AuthorController {
     }
 
     @GetMapping
+    @ApiOperation("Authors List")
     public Page<AuthorDetailsDto> list(Pageable paging) {
         return authorService.list(paging);
     }
