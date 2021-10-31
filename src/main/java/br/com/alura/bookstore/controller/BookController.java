@@ -31,7 +31,7 @@ public class BookController {
 
     @PostMapping
     @ApiOperation("Register new book")
-    public ResponseEntity<?> register(@RequestBody @Valid BookFormDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<BookDetailsDto> register(@RequestBody @Valid BookFormDto dto, UriComponentsBuilder uriBuilder) {
 
         BookDetailsDto bookDetailsDto = bookService.register(dto);
 
@@ -57,7 +57,7 @@ public class BookController {
 
     @PutMapping
     @ApiOperation("Update info about a specific book")
-    public ResponseEntity<?> update(@RequestBody @Valid BookUpdateFormDto dto) {
+    public ResponseEntity<BookDetailsDto> update(@RequestBody @Valid BookUpdateFormDto dto) {
 
         BookDetailsDto detailsDto = bookService.update(dto);
 
