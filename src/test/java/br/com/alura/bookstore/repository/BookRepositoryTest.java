@@ -55,11 +55,11 @@ class BookRepositoryTest {
         Author authorA = new Author(null, "Tolkien", "tolkien@example.com", LocalDate.now(),
                 "An English writer.");
         Author authorB = new Author(null, "Machado", "axe@example.com", LocalDate.now(),
-                "An Brazilian writer.");
+                "A Brazilian writer.");
         Author authorC = new Author(null, "Austen", "austen@example.com", LocalDate.now(),
                 "An English novelist.");
         Author authorD = new Author(null, "Graciliano", "baleia@example.com", LocalDate.now(),
-                "An Brazilian writer.");
+                "A Brazilian writer.");
 
         testEm.persist(authorA);
         testEm.persist(authorB);

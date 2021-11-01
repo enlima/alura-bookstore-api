@@ -76,7 +76,7 @@ class AuthorServiceTest {
 
         Author authorA = createAuthorA();
         Author authorB = new Author(2L, "Machado", "axe@example.com", LocalDate.now(),
-                "An Brazilian writer.");
+                "A Brazilian writer.");
         List<Author> authors = new ArrayList<>();
         authors.add(authorA);
         authors.add(authorB);
