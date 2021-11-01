@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -83,7 +82,7 @@ class AuthorServiceTest {
         authors.add(authorB);
         Page<Author> pagedAuthors = new PageImpl<>(authors);
 
-        Mockito.when(authorRepository.findAll(any(Pageable.class))).thenReturn(pagedAuthors);
+        when(authorRepository.findAll(any(Pageable.class))).thenReturn(pagedAuthors);
 
         Pageable pageRequest = PageRequest.of(0, 2);
         Page<AuthorDetailsDto> list = authorService.list(pageRequest);
