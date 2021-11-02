@@ -33,6 +33,9 @@ class AuthorServiceTest {
     @Mock
     private AuthorRepository authorRepository;
 
+    @Mock
+    private BookService bookService;
+
     @InjectMocks
     private AuthorService authorService;
 
@@ -159,7 +162,12 @@ class AuthorServiceTest {
 
     @Test
     public void shouldDeleteAuthor() {
+
+        when(authorRepository.findById(1L)).thenReturn(Optional.of(createAuthorA()));
+        when(bookService.existsBookByAuthor(any(Author.class))).thenReturn(false);
+
         authorService.delete(1L);
+
         verify(authorRepository, times(1)).deleteById(1L);
     }
 }

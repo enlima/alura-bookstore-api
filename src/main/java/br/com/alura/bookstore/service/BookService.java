@@ -71,7 +71,7 @@ public class BookService {
     public void checkIfBookAlreadyExists(String title) {
 
         if (bookRepository.existsByTitle(title.trim())) {
-            throw new DataIntegrityViolationException("The book title '" + title.trim() + "' already exists " +
+            throw new DataIntegrityViolationException("Book title '" + title.trim() + "' already exists " +
                     "associated with a different book ID!");
         }
     }
@@ -79,6 +79,10 @@ public class BookService {
     public Book getBookById(Long id) {
         return bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Informed book " +
                 "(ID: " + id + ") not found!"));
+    }
+
+    public boolean existsBookByAuthor(Author author) {
+        return bookRepository.existsByAuthor(author);
     }
 
     @Transactional

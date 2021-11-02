@@ -120,4 +120,17 @@ class AuthorControllerTest {
         mvc.perform(post("/authors").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isConflict());
     }
+
+    @Test
+    public void shouldNotDeleteIfExistsBookByAuthor() throws Exception {
+
+        String jsonBook = "{\"title\": \"Vidas Secas\", \"publicationDate\": \"1938-01-01\", \"pages\": 158, " +
+                "\"authorId\": " + this.authorId + "}";
+
+        mvc.perform(post("/books").contentType(MediaType.APPLICATION_JSON)
+                .content(jsonBook));
+
+        mvc.perform(delete("/authors/" + this.authorId).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict());
+    }
 }

@@ -35,6 +35,11 @@ class BookRepositoryTest {
     @Autowired
     private TestEntityManager testEm;
 
+    public void registerBook(Author author) {
+        Book book = new Book(null, "The Hobbit", LocalDate.now(), 310, author);
+        testEm.persist(book);
+    }
+
     @Test
     public void checkIfBookExistsByTitleTest() {
 
@@ -42,11 +47,26 @@ class BookRepositoryTest {
                 "An English writer.");
         testEm.persist(author);
 
-        Book book = new Book(null, "The Hobbit", LocalDate.now(), 310, author);
-        testEm.persist(book);
+        registerBook(author);
 
         assertTrue(bookRepository.existsByTitle("The Hobbit"));
         assertFalse(bookRepository.existsByTitle("Vidas Secas"));
+    }
+
+    @Test
+    public void checkIfBookExistsByAuthorTest() {
+
+        Author authorA = new Author(null, "Tolkien", "tolkien@example.com", LocalDate.now(),
+                "An English writer.");
+        testEm.persist(authorA);
+        Author authorB = new Author(null, "Graciliano", "baleia@example.com", LocalDate.now(),
+                "A Brazilian writer.");
+        testEm.persist(authorB);
+
+        registerBook(authorA);
+
+        assertTrue(bookRepository.existsByAuthor(authorA));
+        assertFalse(bookRepository.existsByAuthor(authorB));
     }
 
     @Test

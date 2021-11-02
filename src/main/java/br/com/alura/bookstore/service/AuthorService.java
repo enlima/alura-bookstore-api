@@ -21,6 +21,9 @@ public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
 
+    @Autowired
+    private BookService bookService;
+
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Transactional
@@ -65,7 +68,7 @@ public class AuthorService {
     public void checkIfAuthorAlreadyExists(String name) {
 
         if (authorRepository.existsByName(name.trim())) {
-            throw new DataIntegrityViolationException("The author '" + name.trim() + "' already exists " +
+            throw new DataIntegrityViolationException("Author '" + name.trim() + "' already exists " +
                     "associated with a different author ID!");
         }
     }
@@ -77,6 +80,12 @@ public class AuthorService {
 
     @Transactional
     public void delete(Long id) {
+
+        if (bookService.existsBookByAuthor(getAuthorById(id))) {
+            throw new DataIntegrityViolationException("Author (ID: " + id + ") cannot be deleted because it's " +
+                    "currently associated with one or more books.");
+        }
+
         authorRepository.deleteById(id);
     }
 }

@@ -5,7 +5,6 @@ import br.com.alura.bookstore.dto.BookFormDto;
 import br.com.alura.bookstore.dto.BookUpdateFormDto;
 import br.com.alura.bookstore.model.Author;
 import br.com.alura.bookstore.model.Book;
-import br.com.alura.bookstore.repository.AuthorRepository;
 import br.com.alura.bookstore.repository.BookRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,9 +30,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BookServiceTest {
-
-    @Mock
-    private AuthorRepository authorRepository;
 
     @Mock
     private BookRepository bookRepository;
@@ -180,5 +176,11 @@ class BookServiceTest {
     public void shouldDeleteBook() {
         bookService.delete(1L);
         verify(bookRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    public void shouldCheckIfExistsBookByAuthor() {
+        bookService.existsBookByAuthor(createAuthor());
+        verify(bookRepository, times(1)).existsByAuthor(any(Author.class));
     }
 }
