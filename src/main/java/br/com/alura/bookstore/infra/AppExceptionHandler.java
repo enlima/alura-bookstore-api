@@ -6,6 +6,7 @@ import br.com.alura.bookstore.dto.Http500Dto;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -25,6 +26,12 @@ public class AppExceptionHandler {
     public List<Http400Dto> httpStatus400(MethodArgumentNotValidException ex) {
         return ex.getFieldErrors().stream().map(error ->
                 new Http400Dto(error.getField(), error.getDefaultMessage())).collect(Collectors.toList());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(code = HttpStatus.FORBIDDEN)
+    public String httpStatus403(Exception ex) {
+        return ex.getMessage();
     }
 
     @ExceptionHandler({EntityNotFoundException.class, EmptyResultDataAccessException.class})

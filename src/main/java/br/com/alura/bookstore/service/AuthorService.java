@@ -24,7 +24,8 @@ public class AuthorService {
     @Autowired
     private BookService bookService;
 
-    private final ModelMapper modelMapper = new ModelMapper();
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Transactional
     public AuthorDetailsDto register(AuthorFormDto dto) {
@@ -47,14 +48,14 @@ public class AuthorService {
 
     public AuthorDetailsDto detail(Long id) {
 
-        Author author = getAuthorById(id);
+        Author author = getAuthor(id);
         return modelMapper.map(author, AuthorDetailsDto.class);
     }
 
     @Transactional
     public AuthorDetailsDto update(AuthorUpdateFormDto dto) {
 
-        Author author = getAuthorById(dto.getId());
+        Author author = getAuthor(dto.getId());
 
         if (!author.getName().trim().equals(dto.getName().trim())) {
             checkIfAuthorAlreadyExists(dto.getName());
@@ -69,11 +70,11 @@ public class AuthorService {
 
         if (authorRepository.existsByName(name.trim())) {
             throw new DataIntegrityViolationException("Author '" + name.trim() + "' already exists " +
-                    "associated with a different author ID!");
+                    "associated with a different Author ID!");
         }
     }
 
-    public Author getAuthorById(Long id) {
+    public Author getAuthor(Long id) {
         return authorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Informed author " +
                 "(ID: " + id + ") not found!"));
     }
@@ -81,7 +82,7 @@ public class AuthorService {
     @Transactional
     public void delete(Long id) {
 
-        if (bookService.existsBookByAuthor(getAuthorById(id))) {
+        if (bookService.existsBookByAuthor(getAuthor(id))) {
             throw new DataIntegrityViolationException("Author (ID: " + id + ") cannot be deleted because it's " +
                     "currently associated with one or more books.");
         }

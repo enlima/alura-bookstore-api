@@ -25,7 +25,8 @@ public class BookService {
     @Autowired
     private AuthorService authorService;
 
-    private final ModelMapper modelMapper = new ModelMapper();
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Transactional
     public BookDetailsDto register(BookFormDto dto) {
@@ -34,7 +35,7 @@ public class BookService {
 
         Book book = modelMapper.map(dto, Book.class);
         book.setId(null);
-        book.setAuthor(authorService.getAuthorById(dto.getAuthorId()));
+        book.setAuthor(authorService.getAuthor(dto.getAuthorId()));
 
         bookRepository.save(book);
 
@@ -49,20 +50,20 @@ public class BookService {
 
     public BookDetailsDto detail(Long id) {
 
-        Book book = getBookById(id);
+        Book book = getBook(id);
         return modelMapper.map(book, BookDetailsDto.class);
     }
 
     @Transactional
     public BookDetailsDto update(BookUpdateFormDto dto) {
 
-        Book book = getBookById(dto.getId());
+        Book book = getBook(dto.getId());
 
         if (!book.getTitle().trim().equals(dto.getTitle().trim())) {
             checkIfBookAlreadyExists(dto.getTitle());
         }
 
-        Author author = authorService.getAuthorById(dto.getAuthorId());
+        Author author = authorService.getAuthor(dto.getAuthorId());
         book.updateInfo(dto.getTitle(), dto.getPublicationDate(), dto.getPages(), author);
 
         return modelMapper.map(book, BookDetailsDto.class);
@@ -72,11 +73,11 @@ public class BookService {
 
         if (bookRepository.existsByTitle(title.trim())) {
             throw new DataIntegrityViolationException("Book title '" + title.trim() + "' already exists " +
-                    "associated with a different book ID!");
+                    "associated with a different Book ID!");
         }
     }
 
-    public Book getBookById(Long id) {
+    public Book getBook(Long id) {
         return bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Informed book " +
                 "(ID: " + id + ") not found!"));
     }

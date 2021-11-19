@@ -65,7 +65,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("Delete a book")
+    @ApiOperation("Delete book")
     public ResponseEntity<?> delete(@PathVariable @NotNull Long id) {
 
         bookService.delete(id);

@@ -34,7 +34,7 @@ class ReportServiceTest {
 
         when(bookRepository.reportBooksByAuthors()).thenReturn(mockReport);
 
-        List<AuthorStatsDto> report = bookRepository.reportBooksByAuthors();
+        List<AuthorStatsDto> report = reportService.reportBooksByAuthors();
 
         assertEquals(mockA.getAuthor(), report.get(0).getAuthor());
         assertEquals(mockA.getTotalBooks(), report.get(0).getTotalBooks());

@@ -1,5 +1,9 @@
 package br.com.alura.bookstore.controller;
 
+import br.com.alura.bookstore.infra.security.TokenService;
+import br.com.alura.bookstore.model.User;
+import br.com.alura.bookstore.repository.UserRepository;
+import br.com.alura.bookstore.service.ProfileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,17 +32,40 @@ class AuthorControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    private ProfileService profileService;
+
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private UserRepository userRepository;
+
     private String authorId;
+    private String token;
 
     @BeforeEach
+    public void generateTokenAndAuthor() throws Exception {
+
+        User logged = new User("Gimli", "lockbearer", "2879");
+        logged.addProfile(profileService.getProfile(1L));
+        userRepository.save(logged);
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(logged, logged.getLogin());
+        this.token = tokenService.generateToken(authentication);
+
+        createAuthor();
+    }
+
     public void createAuthor() throws Exception {
 
-        String jsonRegister = "{\"name\": \"Graciliano\", \"email\": \"baleia@example.com\", " +
+        String jsonAuthor = "{\"name\": \"Graciliano\", \"email\": \"baleia@example.com\", " +
                 "\"birthdate\": \"1892-10-27\", \"miniResume\": \"A Brazilian writer.\"}";
 
         MvcResult result = mvc.perform(post("/authors").contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRegister)).andReturn();
+                .content(jsonAuthor).header("Authorization", token)).andReturn();
         String location = result.getResponse().getHeader("Location");
+        assert location != null;
         this.authorId = location.substring(location.lastIndexOf("/") + 1);
     }
 
@@ -46,7 +75,8 @@ class AuthorControllerTest {
         String json = "{\"name\": \"Tolkien\", \"email\": \"tolkien@example.com\", " +
                 "\"birthdate\": \"1892-01-03\", \"miniResume\": \"An English writer.\"}";
 
-        mvc.perform(post("/authors").contentType(MediaType.APPLICATION_JSON).content(json))
+        mvc.perform(post("/authors").contentType(MediaType.APPLICATION_JSON).content(json)
+                        .header("Authorization", token))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(content().json(json));
@@ -54,7 +84,9 @@ class AuthorControllerTest {
 
     @Test
     public void shouldReturnPageableAuthorsList() throws Exception {
-        mvc.perform(get("/authors").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        mvc.perform(get("/authors").contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -64,7 +96,8 @@ class AuthorControllerTest {
                 "\"email\": \"baleia@example.com\", \"birthdate\": \"1892-10-27\", " +
                 "\"miniResume\": \"A Brazilian writer.\"}";
 
-        mvc.perform(get("/authors/" + this.authorId).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get("/authors/" + this.authorId).contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token))
                 .andExpect(status().isOk()).andExpect(content().json(jsonReturn));
     }
 
@@ -75,14 +108,17 @@ class AuthorControllerTest {
                 "\"email\": \"baleia@example.com\", \"birthdate\": \"1892-10-27\", " +
                 "\"miniResume\": \"A Brazilian writer and journalist.\"}";
 
-        mvc.perform(put("/authors").contentType(MediaType.APPLICATION_JSON).content(json))
+        mvc.perform(put("/authors").contentType(MediaType.APPLICATION_JSON).content(json)
+                        .header("Authorization", token))
                 .andExpect(status().isOk())
                 .andExpect(content().json(json));
     }
 
     @Test
     public void shouldDeleteAuthor() throws Exception {
-        mvc.perform(delete("/authors/" + this.authorId)).andExpect(status().isNoContent());
+        mvc.perform(delete("/authors/" + this.authorId).contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -90,9 +126,11 @@ class AuthorControllerTest {
 
         String json = "{}";
 
-        mvc.perform(post("/authors").contentType(MediaType.APPLICATION_JSON).content(json))
+        mvc.perform(post("/authors").contentType(MediaType.APPLICATION_JSON).content(json)
+                        .header("Authorization", token))
                 .andExpect(status().isBadRequest());
-        mvc.perform(put("/authors").contentType(MediaType.APPLICATION_JSON).content(json))
+        mvc.perform(put("/authors").contentType(MediaType.APPLICATION_JSON).content(json)
+                        .header("Authorization", token))
                 .andExpect(status().isBadRequest());
     }
 
@@ -103,11 +141,14 @@ class AuthorControllerTest {
                 "\"email\": \"baleia@example.com\", \"birthdate\": \"1892-10-27\", " +
                 "\"miniResume\": \"A Brazilian writer and journalist.\"}";
 
-        mvc.perform(put("/authors").contentType(MediaType.APPLICATION_JSON).content(json))
+        mvc.perform(put("/authors").contentType(MediaType.APPLICATION_JSON).content(json)
+                        .header("Authorization", token))
                 .andExpect(status().isNotFound());
-        mvc.perform(get("/authors/99999").contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get("/authors/99999").contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token))
                 .andExpect(status().isNotFound());
-        mvc.perform(delete("/authors/99999").contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(delete("/authors/99999").contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token))
                 .andExpect(status().isNotFound());
     }
 
@@ -117,7 +158,8 @@ class AuthorControllerTest {
         String json = "{\"name\": \"Graciliano\", \"email\": \"baleia@example.com\", " +
                 "\"birthdate\": \"1892-10-27\", \"miniResume\": \"A Brazilian writer.\"}";
 
-        mvc.perform(post("/authors").contentType(MediaType.APPLICATION_JSON).content(json))
+        mvc.perform(post("/authors").contentType(MediaType.APPLICATION_JSON).content(json)
+                        .header("Authorization", token))
                 .andExpect(status().isConflict());
     }
 
@@ -128,9 +170,10 @@ class AuthorControllerTest {
                 "\"authorId\": " + this.authorId + "}";
 
         mvc.perform(post("/books").contentType(MediaType.APPLICATION_JSON)
-                .content(jsonBook));
+                .content(jsonBook).header("Authorization", token));
 
-        mvc.perform(delete("/authors/" + this.authorId).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(delete("/authors/" + this.authorId).contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token))
                 .andExpect(status().isConflict());
     }
 }

@@ -1,5 +1,6 @@
 package br.com.alura.bookstore.service;
 
+import br.com.alura.bookstore.dto.AuthorBasicsDto;
 import br.com.alura.bookstore.dto.BookDetailsDto;
 import br.com.alura.bookstore.dto.BookFormDto;
 import br.com.alura.bookstore.dto.BookUpdateFormDto;
@@ -11,16 +12,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,6 +33,9 @@ class BookServiceTest {
     @Mock
     private AuthorService authorService;
 
+    @Mock
+    private ModelMapper modelMapper;
+
     @InjectMocks
     private BookService bookService;
 
@@ -45,7 +44,7 @@ class BookServiceTest {
                 "An English novelist.");
     }
 
-    public Book createBookA() {
+    public Book createBook() {
         return new Book(1L, "Pride and Prejudice", LocalDate.now(), 408, createAuthor());
     }
 
@@ -57,10 +56,15 @@ class BookServiceTest {
     public void shouldRegisterNewBookIfValidData() {
 
         BookFormDto formDto = createBookFormDto();
+        Book book = createBook();
 
         Author author = createAuthor();
-        when(authorService.getAuthorById(1L)).thenReturn(author);
+        when(authorService.getAuthor(1L)).thenReturn(author);
         when(bookRepository.existsByTitle(formDto.getTitle())).thenReturn(false);
+        when(modelMapper.map(formDto, Book.class)).thenReturn(book);
+        when(modelMapper.map(book, BookDetailsDto.class))
+                .thenReturn(new BookDetailsDto(book.getId(), book.getTitle(), book.getPublicationDate(),
+                        book.getPages(), new AuthorBasicsDto(book.getAuthor().getId(), book.getAuthor().getName())));
 
         BookDetailsDto detailsDto = bookService.register(formDto);
 
@@ -84,49 +88,23 @@ class BookServiceTest {
     }
 
     @Test
-    public void shouldReturnPageableBooksList() {
-
-        Book bookA = createBookA();
-        Book bookB = new Book(1L, "Persuasion", LocalDate.now(), 268, createAuthor());
-        List<Book> books = new ArrayList<>();
-        books.add(bookA);
-        books.add(bookB);
-        Page<Book> pagedBooks = new PageImpl<>(books);
-
-        when(bookRepository.findAll(any(Pageable.class))).thenReturn(pagedBooks);
-
-        Pageable pageRequest = PageRequest.of(0, 2);
-        Page<BookDetailsDto> list = bookService.list(pageRequest);
-
-        assertEquals(bookA.getId(), list.getContent().get(0).getId());
-        assertEquals(bookA.getTitle(), list.getContent().get(0).getTitle());
-        assertEquals(bookA.getPublicationDate(), list.getContent().get(0).getPublicationDate());
-        assertEquals(bookA.getPages(), list.getContent().get(0).getPages());
-        assertEquals(bookA.getAuthor().getId(), list.getContent().get(0).getAuthor().getId());
-        assertEquals(bookA.getAuthor().getName(), list.getContent().get(0).getAuthor().getName());
-        assertEquals(bookB.getId(), list.getContent().get(1).getId());
-        assertEquals(bookB.getTitle(), list.getContent().get(1).getTitle());
-        assertEquals(bookB.getPublicationDate(), list.getContent().get(1).getPublicationDate());
-        assertEquals(bookB.getPages(), list.getContent().get(1).getPages());
-        assertEquals(bookB.getAuthor().getId(), list.getContent().get(1).getAuthor().getId());
-        assertEquals(bookB.getAuthor().getName(), list.getContent().get(1).getAuthor().getName());
-    }
-
-    @Test
     public void shouldReturnBookDetails() {
 
-        Book bookA = createBookA();
+        Book book = createBook();
 
-        when(bookRepository.findById(1L)).thenReturn(Optional.of(bookA));
+        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+        when(modelMapper.map(book, BookDetailsDto.class))
+                .thenReturn(new BookDetailsDto(book.getId(), book.getTitle(), book.getPublicationDate(),
+                        book.getPages(), new AuthorBasicsDto(book.getAuthor().getId(), book.getAuthor().getName())));
 
         BookDetailsDto detailsDto = bookService.detail(1L);
 
-        assertEquals(bookA.getId(), detailsDto.getId());
-        assertEquals(bookA.getTitle(), detailsDto.getTitle());
-        assertEquals(bookA.getPublicationDate(), detailsDto.getPublicationDate());
-        assertEquals(bookA.getPages(), detailsDto.getPages());
-        assertEquals(bookA.getAuthor().getId(), detailsDto.getAuthor().getId());
-        assertEquals(bookA.getAuthor().getName(), detailsDto.getAuthor().getName());
+        assertEquals(book.getId(), detailsDto.getId());
+        assertEquals(book.getTitle(), detailsDto.getTitle());
+        assertEquals(book.getPublicationDate(), detailsDto.getPublicationDate());
+        assertEquals(book.getPages(), detailsDto.getPages());
+        assertEquals(book.getAuthor().getId(), detailsDto.getAuthor().getId());
+        assertEquals(book.getAuthor().getName(), detailsDto.getAuthor().getName());
     }
 
     @Test
@@ -137,15 +115,18 @@ class BookServiceTest {
     @Test
     public void shouldUpdateBookInfoIfValidData() {
 
-        Book bookA = createBookA();
+        Book book = createBook();
         BookUpdateFormDto formDto = new BookUpdateFormDto(1L);
         formDto.setTitle("Prejudice and Pride");
         formDto.setPublicationDate(LocalDate.now());
         formDto.setPages(804);
         formDto.setAuthorId(1L);
 
-        when(bookRepository.findById(1L)).thenReturn(Optional.of(bookA));
-        when(authorService.getAuthorById(1L)).thenReturn(createAuthor());
+        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+        when(authorService.getAuthor(1L)).thenReturn(createAuthor());
+        when(modelMapper.map(book, BookDetailsDto.class))
+                .thenReturn(new BookDetailsDto(formDto.getId(), formDto.getTitle(), formDto.getPublicationDate(),
+                        formDto.getPages(), new AuthorBasicsDto(book.getAuthor().getId(), book.getAuthor().getName())));
 
         BookDetailsDto detailsDto = bookService.update(formDto);
 
@@ -159,7 +140,7 @@ class BookServiceTest {
     @Test
     public void shouldNotUpdateBookInfoIfInformedTitleAlreadyExists() {
 
-        Book bookA = createBookA();
+        Book bookA = createBook();
         BookUpdateFormDto formDto = new BookUpdateFormDto(1L);
         formDto.setTitle("Prejudice and Pride");
         formDto.setPublicationDate(LocalDate.now());

@@ -10,16 +10,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,10 +31,13 @@ class AuthorServiceTest {
     @Mock
     private BookService bookService;
 
+    @Mock
+    private ModelMapper modelMapper;
+
     @InjectMocks
     private AuthorService authorService;
 
-    public Author createAuthorA() {
+    public Author createAuthor() {
         return new Author(1L, "Tolkien", "tolkien@example.com", LocalDate.now(),
                 "An English writer.");
     }
@@ -53,6 +51,12 @@ class AuthorServiceTest {
     public void shouldRegisterNewAuthorIfValidData() {
 
         AuthorFormDto formDto = createAuthorFormDto();
+        Author author = createAuthor();
+
+        when(modelMapper.map(formDto, Author.class)).thenReturn(author);
+        when(modelMapper.map(author, AuthorDetailsDto.class))
+                .thenReturn(new AuthorDetailsDto(author.getId(), author.getName(), author.getEmail(),
+                        author.getBirthdate(), author.getMiniResume()));
 
         AuthorDetailsDto detailsDto = authorService.register(formDto);
 
@@ -75,47 +79,22 @@ class AuthorServiceTest {
     }
 
     @Test
-    public void shouldReturnPageableAuthorsList() {
-
-        Author authorA = createAuthorA();
-        Author authorB = new Author(2L, "Machado", "axe@example.com", LocalDate.now(),
-                "A Brazilian writer.");
-        List<Author> authors = new ArrayList<>();
-        authors.add(authorA);
-        authors.add(authorB);
-        Page<Author> pagedAuthors = new PageImpl<>(authors);
-
-        when(authorRepository.findAll(any(Pageable.class))).thenReturn(pagedAuthors);
-
-        Pageable pageRequest = PageRequest.of(0, 2);
-        Page<AuthorDetailsDto> list = authorService.list(pageRequest);
-
-        assertEquals(authorA.getId(), list.getContent().get(0).getId());
-        assertEquals(authorA.getName(), list.getContent().get(0).getName());
-        assertEquals(authorA.getEmail(), list.getContent().get(0).getEmail());
-        assertEquals(authorA.getBirthdate(), list.getContent().get(0).getBirthdate());
-        assertEquals(authorA.getMiniResume(), list.getContent().get(0).getMiniResume());
-        assertEquals(authorB.getId(), list.getContent().get(1).getId());
-        assertEquals(authorB.getName(), list.getContent().get(1).getName());
-        assertEquals(authorB.getEmail(), list.getContent().get(1).getEmail());
-        assertEquals(authorB.getBirthdate(), list.getContent().get(1).getBirthdate());
-        assertEquals(authorB.getMiniResume(), list.getContent().get(1).getMiniResume());
-    }
-
-    @Test
     public void shouldReturnAuthorDetails() {
 
-        Author authorA = createAuthorA();
+        Author author = createAuthor();
 
-        when(authorRepository.findById(1L)).thenReturn(Optional.of(authorA));
+        when(authorRepository.findById(1L)).thenReturn(Optional.of(author));
+        when(modelMapper.map(author, AuthorDetailsDto.class))
+                .thenReturn(new AuthorDetailsDto(author.getId(), author.getName(), author.getEmail(),
+                        author.getBirthdate(), author.getMiniResume()));
 
         AuthorDetailsDto detailsDto = authorService.detail(1L);
 
-        assertEquals(authorA.getId(), detailsDto.getId());
-        assertEquals(authorA.getName(), detailsDto.getName());
-        assertEquals(authorA.getEmail(), detailsDto.getEmail());
-        assertEquals(authorA.getBirthdate(), detailsDto.getBirthdate());
-        assertEquals(authorA.getMiniResume(), detailsDto.getMiniResume());
+        assertEquals(author.getId(), detailsDto.getId());
+        assertEquals(author.getName(), detailsDto.getName());
+        assertEquals(author.getEmail(), detailsDto.getEmail());
+        assertEquals(author.getBirthdate(), detailsDto.getBirthdate());
+        assertEquals(author.getMiniResume(), detailsDto.getMiniResume());
     }
 
     @Test
@@ -126,14 +105,17 @@ class AuthorServiceTest {
     @Test
     public void shouldUpdateAuthorInfoIfValidData() {
 
-        Author authorA = createAuthorA();
+        Author author = createAuthor();
         AuthorUpdateFormDto formDto = new AuthorUpdateFormDto(1L);
         formDto.setName("J.R.R. Tolkien");
         formDto.setEmail("tolkien_jrr@email.com");
         formDto.setBirthdate(LocalDate.now());
         formDto.setMiniResume("An English writer and poet.");
 
-        when(authorRepository.findById(1L)).thenReturn(Optional.of(authorA));
+        when(authorRepository.findById(1L)).thenReturn(Optional.of(author));
+        when(modelMapper.map(author, AuthorDetailsDto.class))
+                .thenReturn(new AuthorDetailsDto(formDto.getId(), formDto.getName(), formDto.getEmail(),
+                        formDto.getBirthdate(), formDto.getMiniResume()));
 
         AuthorDetailsDto detailsDto = authorService.update(formDto);
 
@@ -147,7 +129,7 @@ class AuthorServiceTest {
     @Test
     public void shouldNotUpdateAuthorInfoIfInformedNameAlreadyExists() {
 
-        Author authorA = createAuthorA();
+        Author authorA = createAuthor();
         AuthorUpdateFormDto formDto = new AuthorUpdateFormDto(1L);
         formDto.setName("Machado");
         formDto.setEmail("tolkien@example.com");
@@ -163,7 +145,7 @@ class AuthorServiceTest {
     @Test
     public void shouldDeleteAuthor() {
 
-        when(authorRepository.findById(1L)).thenReturn(Optional.of(createAuthorA()));
+        when(authorRepository.findById(1L)).thenReturn(Optional.of(createAuthor()));
         when(bookService.existsBookByAuthor(any(Author.class))).thenReturn(false);
 
         authorService.delete(1L);
