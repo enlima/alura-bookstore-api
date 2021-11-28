@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  bookstore_database:
+    image: mysql:8.0
+    restart: always
+    expose:
+      - 3306
+    env_file:
+      - bookstore_database.env
+
+  bookstore_app:
+    image: alura/bookstore-api
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - bookstore_database
+    env_file:
+      - bookstore_app.env

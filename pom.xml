@@ -12,7 +12,7 @@
 
     <groupId>br.com.alura</groupId>
     <artifactId>bookstore-api</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>bookstore-api</name>
     <description>Bookstore API REST</description>
     <properties>
