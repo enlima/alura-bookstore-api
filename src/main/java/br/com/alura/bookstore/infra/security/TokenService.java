@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TokenService {
 
-    @Value("${jwst.secret}")
+    @Value("${jwt.secret}")
     private String secret;
 
     public String generateToken(Authentication authentication) {
