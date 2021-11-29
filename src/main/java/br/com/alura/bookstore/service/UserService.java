@@ -39,7 +39,8 @@ public class UserService {
     @Transactional
     public UserDto register(UserFormDto dto) {
 
-        checkIfUserAlreadyExists(dto.getLogin());
+        checkLoginAvailability(dto.getLogin());
+        checkEmailAvailability(dto.getEmail());
 
         User user = modelMapper.map(dto, User.class);
         user.setId(null);
@@ -70,7 +71,11 @@ public class UserService {
         User user = getUser(dto.getId());
 
         if (!user.getLogin().trim().equals(dto.getLogin().trim())) {
-            checkIfUserAlreadyExists(dto.getLogin());
+            checkLoginAvailability(dto.getLogin());
+        }
+
+        if (!user.getEmail().trim().equals(dto.getEmail().trim())) {
+            checkEmailAvailability(dto.getEmail());
         }
 
         List<Profile> profiles = new ArrayList<>();
@@ -84,10 +89,18 @@ public class UserService {
         return modelMapper.map(user, UserDetailsDto.class);
     }
 
-    public void checkIfUserAlreadyExists(String login) {
+    public void checkLoginAvailability(String login) {
 
         if (userRepository.existsByLogin(login.trim())) {
             throw new DataIntegrityViolationException("Login '" + login.trim() + "' already exists " +
+                    "associated with a different User ID!");
+        }
+    }
+
+    public void checkEmailAvailability(String email) {
+
+        if (userRepository.existsByEmail(email.trim())) {
+            throw new DataIntegrityViolationException("Email '" + email.trim() + "' already exists " +
                     "associated with a different User ID!");
         }
     }

@@ -161,4 +161,14 @@ class UserControllerTest {
                         .header("Authorization", token))
                 .andExpect(status().isConflict());
     }
+
+    @Test
+    public void shouldReturnConflictIfEmailAlreadyExists() throws Exception {
+
+        String json = "{\"name\": \"Gandalf\", \"login\": \"olorin\", \"email\": \"grey@mail.com\", \"profileId\": 1}";
+
+        mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(json)
+                        .header("Authorization", token))
+                .andExpect(status().isConflict());
+    }
 }

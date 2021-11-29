@@ -10,6 +10,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByLogin(String login);
 
+    boolean existsByEmail(String email);
+
     Optional<User> findByLogin(String login);
 
     @Query("SELECT u FROM User u JOIN FETCH u.profiles WHERE u.id = :id")

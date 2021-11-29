@@ -89,6 +89,16 @@ class UserServiceTest {
     }
 
     @Test
+    public void shouldNotRegisterNewUserIfEmailAlreadyExists() {
+
+        UserFormDto formDto = createUserFormDto();
+
+        when(userRepository.existsByEmail(formDto.getEmail())).thenReturn(true);
+
+        assertThrows(DataIntegrityViolationException.class, () -> userService.register(formDto));
+    }
+
+    @Test
     public void shouldReturnUserDetails() {
 
         User user = createUser();
@@ -148,6 +158,21 @@ class UserServiceTest {
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(userA));
         when(userRepository.existsByLogin(formDto.getLogin())).thenReturn(true);
+
+        assertThrows(DataIntegrityViolationException.class, () -> userService.update(formDto));
+    }
+
+    @Test
+    public void shouldNotUpdateUserInfoIfInformedEmailAlreadyExists() {
+
+        List<Long> profilesId = new ArrayList<>();
+        profilesId.add(1L);
+
+        User userA = createUser();
+        UserUpdateFormDto formDto = new UserUpdateFormDto(1L, "Gimli", "lockbearer", "dwarf@axe.com", profilesId);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userA));
+        when(userRepository.existsByEmail(formDto.getEmail())).thenReturn(true);
 
         assertThrows(DataIntegrityViolationException.class, () -> userService.update(formDto));
     }
