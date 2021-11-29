@@ -17,10 +17,11 @@ public class UserDetailsDto extends UserDto {
 
     private List<Profile> profiles = new ArrayList<>();
 
-    public UserDetailsDto(Long id, String name, String login, List<Profile> profiles) {
+    public UserDetailsDto(Long id, String name, String login, String email, List<Profile> profiles) {
         super.setId(id);
         super.setName(name);
         super.setLogin(login);
+        super.setEmail(email);
         this.profiles = profiles;
     }
 }

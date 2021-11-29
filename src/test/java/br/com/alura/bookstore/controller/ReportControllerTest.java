@@ -45,7 +45,7 @@ class ReportControllerTest {
     @BeforeEach
     public void generateToken() {
 
-        User logged = new User("Gimli", "lockbearer", "2879");
+        User logged = new User("Gimli", "lockbearer", "2879", "dwarf@mail.com");
         logged.addProfile(profileService.getProfile(1L));
         userRepository.save(logged);
 

@@ -47,7 +47,7 @@ class AuthorControllerTest {
     @BeforeEach
     public void generateTokenAndAuthor() throws Exception {
 
-        User logged = new User("Gimli", "lockbearer", "2879");
+        User logged = new User("Gimli", "lockbearer", "2879", "dwarf@mail.com");
         logged.addProfile(profileService.getProfile(1L));
         userRepository.save(logged);
 

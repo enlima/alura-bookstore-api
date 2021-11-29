@@ -50,11 +50,11 @@ class UserServiceTest {
         List<Profile> profiles = new ArrayList<>();
         profiles.add(profile);
 
-        return new User(1L, "Gimli", "lockbearer", "2879", profiles);
+        return new User(1L, "Gimli", "lockbearer", "2879", "dwarf@mail.com", profiles);
     }
 
     public UserFormDto createUserFormDto() {
-        return new UserFormDto("Gimli", "lockbearer", 1L);
+        return new UserFormDto("Gimli", "lockbearer", "dwarf@mail.com", 1L);
     }
 
     @Test
@@ -65,7 +65,7 @@ class UserServiceTest {
 
         when(modelMapper.map(formDto, User.class)).thenReturn(user);
         when(modelMapper.map(user, UserDto.class))
-                .thenReturn(new UserDto(user.getId(), user.getName(), user.getLogin()));
+                .thenReturn(new UserDto(user.getId(), user.getName(), user.getLogin(), user.getEmail()));
         when(encoder.encode(any(String.class))).thenReturn("123456");
 
         UserDto dto = userService.register(formDto);
@@ -75,6 +75,7 @@ class UserServiceTest {
         assertEquals(1L, dto.getId());
         assertEquals(formDto.getName(), dto.getName());
         assertEquals(formDto.getLogin(), dto.getLogin());
+        assertEquals(formDto.getEmail(), dto.getEmail());
     }
 
     @Test
@@ -94,13 +95,14 @@ class UserServiceTest {
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(modelMapper.map(user, UserDetailsDto.class))
-                .thenReturn(new UserDetailsDto(user.getId(), user.getName(), user.getLogin(), user.getProfiles()));
+                .thenReturn(new UserDetailsDto(user.getId(), user.getName(), user.getLogin(), user.getEmail(), user.getProfiles()));
 
         UserDetailsDto detailsDto = userService.detail(1L);
 
         assertEquals(user.getId(), detailsDto.getId());
         assertEquals(user.getName(), detailsDto.getName());
         assertEquals(user.getLogin(), detailsDto.getLogin());
+        assertEquals(user.getEmail(), detailsDto.getEmail());
         assertEquals(user.getProfiles(), detailsDto.getProfiles());
     }
 
@@ -118,11 +120,11 @@ class UserServiceTest {
         profiles.add(profile);
 
         User user = createUser();
-        UserUpdateFormDto formDto = new UserUpdateFormDto(1L, "lockbearer", "dwarf", profilesId);
+        UserUpdateFormDto formDto = new UserUpdateFormDto(1L, "lockbearer", "dwarf", "dwarf@mail.com", profilesId);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(modelMapper.map(user, UserDetailsDto.class))
-                .thenReturn(new UserDetailsDto(user.getId(), formDto.getName(), formDto.getLogin(), profiles));
+                .thenReturn(new UserDetailsDto(user.getId(), formDto.getName(), formDto.getLogin(), formDto.getEmail(), profiles));
         when(profileService.getProfile(any(Long.class))).thenReturn(profile);
 
         UserDetailsDto detailsDto = userService.update(formDto);
@@ -130,6 +132,7 @@ class UserServiceTest {
         assertEquals(formDto.getId(), detailsDto.getId());
         assertEquals(formDto.getName(), detailsDto.getName());
         assertEquals(formDto.getLogin(), detailsDto.getLogin());
+        assertEquals(formDto.getEmail(), detailsDto.getEmail());
         assertEquals(profilesId.get(0), detailsDto.getProfiles().get(0).getId());
         assertEquals("ROLE_COMMON", detailsDto.getProfiles().get(0).getName());
     }
@@ -141,7 +144,7 @@ class UserServiceTest {
         profilesId.add(1L);
 
         User userA = createUser();
-        UserUpdateFormDto formDto = new UserUpdateFormDto(1L, "Gimli", "dwarf", profilesId);
+        UserUpdateFormDto formDto = new UserUpdateFormDto(1L, "Gimli", "dwarf", "dwarf@mail.com", profilesId);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(userA));
         when(userRepository.existsByLogin(formDto.getLogin())).thenReturn(true);

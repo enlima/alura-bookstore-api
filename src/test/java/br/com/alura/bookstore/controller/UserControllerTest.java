@@ -47,7 +47,7 @@ class UserControllerTest {
     @BeforeEach
     public void generateTokenAndUser() throws Exception {
 
-        User logged = new User("Gimli", "lockbearer", "2879");
+        User logged = new User("Gimli", "lockbearer", "2879", "dwarf@mail.com");
         logged.addProfile(profileService.getProfile(1L));
         userRepository.save(logged);
 
@@ -59,7 +59,7 @@ class UserControllerTest {
 
     public void createUser() throws Exception {
 
-        String jsonUser = "{\"name\": \"Gandalf\", \"login\": \"mithrandir\", \"profileId\": 1}";
+        String jsonUser = "{\"name\": \"Gandalf\", \"login\": \"mithrandir\", \"email\": \"grey@mail.com\", \"profileId\": 1}";
 
         MvcResult result = mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON)
                 .content(jsonUser).header("Authorization", token)).andReturn();
@@ -71,8 +71,8 @@ class UserControllerTest {
     @Test
     public void shouldRegisterUser() throws Exception {
 
-        String jsonUser = "{\"name\": \"Legolas\", \"login\": \"greenleaf\", \"profileId\": 2}";
-        String jsonReturn = "{\"name\":\"Legolas\",\"login\":\"greenleaf\"}";
+        String jsonUser = "{\"name\": \"Legolas\", \"login\": \"greenleaf\", \"email\": \"elf@mail.com\", \"profileId\": 2}";
+        String jsonReturn = "{\"name\":\"Legolas\",\"login\":\"greenleaf\", \"email\": \"elf@mail.com\"}";
 
         mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(jsonUser)
                         .header("Authorization", token))
@@ -92,7 +92,7 @@ class UserControllerTest {
     public void shouldReturnUserDetails() throws Exception {
 
         String jsonReturn = "{\"id\": " + this.userId + ", \"name\": \"Gandalf\", \"login\": \"mithrandir\", " +
-                "\"profiles\": [{\"id\": 1, \"name\": \"ROLE_ADMIN\", \"authority\": \"ROLE_ADMIN\"}]}";
+                "\"email\": \"grey@mail.com\", \"profiles\": [{\"id\": 1, \"name\": \"ROLE_ADMIN\", \"authority\": \"ROLE_ADMIN\"}]}";
 
         mvc.perform(get("/users/" + this.userId).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token))
@@ -103,10 +103,10 @@ class UserControllerTest {
     public void shouldUpdateUserInfo() throws Exception {
 
         String jsonUpdate = "{\"id\": " + this.userId + ", \"name\": \"Gandalf the Grey\", \"login\": \"olorin\", " +
-                "\"profilesId\": [1, 2]}";
+                "\"email\": \"white@mail.com\", \"profilesId\": [1, 2]}";
 
         String jsonReturn = "{\"id\": " + this.userId + ", \"name\": \"Gandalf the Grey\", \"login\": \"olorin\", " +
-                "\"profiles\": [{\"id\": 1, \"name\": \"ROLE_ADMIN\", \"authority\": \"ROLE_ADMIN\"}, " +
+                "\"email\": \"white@mail.com\", \"profiles\": [{\"id\": 1, \"name\": \"ROLE_ADMIN\", \"authority\": \"ROLE_ADMIN\"}, " +
                 "{\"id\": 2, \"name\": \"ROLE_COMMON\", \"authority\": \"ROLE_COMMON\"}]}";
 
         mvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON).content(jsonUpdate)
@@ -138,7 +138,7 @@ class UserControllerTest {
     @Test
     public void shouldReturnNotFoundIfIdNotExists() throws Exception {
 
-        String json = "{\"id\": 99999, \"name\": \"Gandalf\", \"login\": \"mithrandir\", " +
+        String json = "{\"id\": 99999, \"name\": \"Gandalf\", \"login\": \"mithrandir\", \"email\": \"grey@mail.com\", " +
                 "\"profilesId\": [1, 2]}";
 
         mvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON).content(json)
@@ -155,7 +155,7 @@ class UserControllerTest {
     @Test
     public void shouldReturnConflictIfLoginAlreadyExists() throws Exception {
 
-        String json = "{\"name\": \"Gandalf\", \"login\": \"mithrandir\", \"profileId\": 1}";
+        String json = "{\"name\": \"Gandalf\", \"login\": \"mithrandir\", \"email\": \"grey@mail.com\", \"profileId\": 1}";
 
         mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(json)
                         .header("Authorization", token))

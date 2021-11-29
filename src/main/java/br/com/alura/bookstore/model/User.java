@@ -25,6 +25,7 @@ public class User implements UserDetails {
     private String name;
     private String login;
     private String password;
+    private String email;
 
     @ManyToMany
     @JoinTable(name = "profiles_users",
@@ -32,15 +33,17 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "profile_id"))
     private List<Profile> profiles = new ArrayList<>();
 
-    public User(String name, String login, String password) {
+    public User(String name, String login, String password, String email) {
         this.name = name;
         this.login = login;
         this.password = password;
+        this.email = email;
     }
 
-    public void updateInfo(String name, String login, List<Profile> profile) {
+    public void updateInfo(String name, String login, String email, List<Profile> profile) {
         this.name = name;
         this.login = login;
+        this.email = email;
         this.profiles.clear();
         for (Profile p : profile) {
             this.addProfile(p);

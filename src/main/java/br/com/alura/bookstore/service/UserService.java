@@ -79,7 +79,7 @@ public class UserService {
             profiles.add(profileService.getProfile(profileId));
         }
 
-        user.updateInfo(dto.getName(), dto.getLogin(), profiles);
+        user.updateInfo(dto.getName(), dto.getLogin(), dto.getEmail(), profiles);
 
         return modelMapper.map(user, UserDetailsDto.class);
     }
