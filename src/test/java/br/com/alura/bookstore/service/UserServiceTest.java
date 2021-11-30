@@ -4,6 +4,7 @@ import br.com.alura.bookstore.dto.UserDetailsDto;
 import br.com.alura.bookstore.dto.UserDto;
 import br.com.alura.bookstore.dto.UserFormDto;
 import br.com.alura.bookstore.dto.UserUpdateFormDto;
+import br.com.alura.bookstore.infra.email.EmailService;
 import br.com.alura.bookstore.model.Profile;
 import br.com.alura.bookstore.model.User;
 import br.com.alura.bookstore.repository.UserRepository;
@@ -34,6 +35,9 @@ class UserServiceTest {
 
     @Mock
     private ProfileService profileService;
+
+    @Mock
+    private EmailService emailService;
 
     @Mock
     private BCryptPasswordEncoder encoder;
@@ -71,6 +75,7 @@ class UserServiceTest {
         UserDto dto = userService.register(formDto);
 
         verify(userRepository, times(1)).save(any(User.class));
+        verify(emailService, times(1)).sendEmail(any(String.class), any(String.class), any(String.class));
 
         assertEquals(1L, dto.getId());
         assertEquals(formDto.getName(), dto.getName());

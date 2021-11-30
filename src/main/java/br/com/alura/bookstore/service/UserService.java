@@ -4,6 +4,7 @@ import br.com.alura.bookstore.dto.UserDetailsDto;
 import br.com.alura.bookstore.dto.UserDto;
 import br.com.alura.bookstore.dto.UserFormDto;
 import br.com.alura.bookstore.dto.UserUpdateFormDto;
+import br.com.alura.bookstore.infra.email.EmailService;
 import br.com.alura.bookstore.model.Profile;
 import br.com.alura.bookstore.model.User;
 import br.com.alura.bookstore.repository.UserRepository;
@@ -31,6 +32,9 @@ public class UserService {
     private ProfileService profileService;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private BCryptPasswordEncoder encoder;
 
     @Autowired
@@ -44,11 +48,18 @@ public class UserService {
 
         User user = modelMapper.map(dto, User.class);
         user.setId(null);
-        user.setPassword(encoder.encode(
-                String.valueOf(new Random().nextInt(999999))));
+        String password = String.valueOf(new Random().nextInt(999999));
+        user.setPassword(encoder.encode(password));
         user.addProfile(profileService.getProfile(dto.getProfileId()));
 
         userRepository.save(user);
+
+        String message = String.format("Hello, %s!\n\n"
+                + "Your registration is confirmed! Now you have access to Alura Bookstore.\n"
+                + "\nLogin: %s"
+                + "\nPassword: %s", user.getName(), user.getLogin(), password);
+
+        emailService.sendEmail(user.getEmail(), "Welcome to Alura Bookstore!", message);
 
         return modelMapper.map(user, UserDto.class);
     }
