@@ -1,249 +1,528 @@
 # bookstore-api
-Bookstore management REST API using Spring Boot. #WIP
+Bookstore management REST API.
 
-Developed for [Alura](https://www.alura.com.br/)'s Java Bootcamp 2021.
+Project developed for the Java Bootcamp from [Alura](https://www.alura.com.br/).
 
+### Technologies and Tools
 
-# Registering an Author
+![](https://img.shields.io/badge/Editor-IntelliJ_IDEA-informational?style=flat&logo=intellij-idea&logoColor=white&color=2b8ebc)
 
-__Request__
+![](https://img.shields.io/badge/Code-Java-informational?style=flat&logo=java&logoColor=white&color=2b8ebc)
+![](https://img.shields.io/badge/Code-Spring_Boot-informational?style=flat&logo=spring&logoColor=white&color=2b8ebc)
+![](https://img.shields.io/badge/Code-JUnit-informational?style=flat&logo=junit5&logoColor=white&color=2b8ebc)
+![](https://img.shields.io/badge/Code-JUnit-informational?style=flat&logo=mockito&logoColor=white&color=2b8ebc)
 
-```POST /authors```
+![](https://img.shields.io/badge/Tools-Maven-informational?style=flat&logo=apachemaven&logoColor=white&color=2b8ebc)
+![](https://img.shields.io/badge/Tools-JWT-informational?style=flat&logo=jsonwebtokens&logoColor=white&color=2b8ebc)
+![](https://img.shields.io/badge/Tools-MySQL-informational?style=flat&logo=mysql&logoColor=white&color=2b8ebc)
+![](https://img.shields.io/badge/Tools-Flyway-informational?style=flat&logo=flyway&logoColor=white&color=2b8ebc)
+![](https://img.shields.io/badge/Tools-Docker-informational?style=flat&logo=docker&logoColor=white&color=2b8ebc)
+![](https://img.shields.io/badge/Tools-Swagger-informational?style=flat&logo=swagger&logoColor=white&color=2b8ebc)
+
+![](https://img.shields.io/badge/Cloud-Heroku-informational?style=flat&logo=heroku&logoColor=white&color=2b8ebc)
+
+## Simplified Documentation
+```Expand items for details and examples```
+
+### Authentication 
+
+<details>
+<summary><b>POST</b> /auth</summary>
+
+_Request Example_
 
 ```json
 {
-    "name": "John Ronald Reuel Tolkien",
-    "email": "tolkien@example.com",
-    "birthdate": "1892-01-03",
-    "miniResume": "An English writer, poet, philologist, and academic, best known as the author of the high fantasy works The Hobbit and The Lord of the Rings."
+  "login": "admin",
+  "password": "999999"
 }
 ```
 
-__Response__
-
-```Status: 201 Created```
-```json
-{
-    "id": 21,
-    "name": "John Ronald Reuel Tolkien",
-    "email": "tolkien@example.com",
-    "birthdate": "1892-01-03",
-    "miniResume": "An English writer, poet, philologist, and academic, best known as the author of the high fantasy works The Hobbit and The Lord of the Rings."
-}
-```
-
-__Rules__
-
-```
-- All fields are mandatories; 
-- Birthdate field must not be a future date;
-- Mini Resume field has a 240 characters limit.
-```
-
-# Get Authors List
-
-__Request__
-
-```GET /authors```
-
-__Response__
+_Response Example_
 
 ```Status: 200 OK```
 ```json
 {
-    "content": [
-        {
-            "id": 19,
-            "name": "Joaquim Maria Machado de Assis",
-            "email": "machado@example.com",
-            "birthdate": "1839-06-21",
-            "miniResume": "A pioneer Brazilian novelist, poet, playwright and short story writer, widely regarded as the greatest writer of Brazilian literature."
-        },
-        {
-            "id": 20,
-            "name": "Jane Austen",
-            "email": "austen@example.com",
-            "birthdate": "1775-12-16",
-            "miniResume": "An English novelist known primarily for her six major novels, which interpret, critique and comment upon the British landed gentry at the end of the 18th century."
-        },
-        {
-            "id": 21,
-            "name": "John Ronald Reuel Tolkien",
-            "email": "tolkien@example.com",
-            "birthdate": "1892-01-03",
-            "miniResume": "An English writer, poet, philologist, and academic, best known as the author of the high fantasy works The Hobbit and The Lord of the Rings."
-        }
-    ],
-    "pageable": {
-        "sort": {
-            "sorted": false,
-            "unsorted": true,
-            "empty": true
-        },
-        "offset": 0,
-        "pageSize": 20,
-        "pageNumber": 0,
-        "unpaged": false,
-        "paged": true
-    },
-    "last": true,
-    "totalPages": 1,
-    "totalElements": 3,
-    "size": 20,
-    "sort": {
-        "sorted": false,
-        "unsorted": true,
-        "empty": true
-    },
-    "first": true,
-    "numberOfElements": 3,
-    "number": 0,
-    "empty": false
+  "token": "xaxhxGxixixIxzx1xix9.exJxdxIxOxIxIx0.Nx2x3xhxSxoxXxWxDxYxdxWxdxWxNxBxxxUxBx2xIxg"
 }
 ```
+</details>
 
-# Registering a Book
+### Users
 
-__Request__
+<details>
+<summary><b>POST</b> /users</summary>
 
-```POST /books```
+_Request Example_
 
 ```json
 {
-    "title": "Pride and Prejudice",
-    "publicationDate": "1813-01-28",
-    "pages": 408,
-    "authorId": 20
+  "name": "Gimli",
+  "login": "lockbearer",
+  "email": "dwarf@mail.com",
+  "profileId": 2
 }
 ```
 
-__Response__
+_Response Example_
 
 ```Status: 201 Created```
 ```json
 {
-    "id": 25,
-    "title": "Pride and Prejudice",
-    "publicationDate": "1813-01-28",
-    "pages": 408,
-    "author": {
-        "id": 20,
-        "name": "Jane Austen"
+  "id": 5,
+  "name": "Gimli",
+  "login": "lockbearer",
+  "email": "dwarf@mail.com"
+}
+```
+</details>
+
+<details>
+<summary><b>GET</b> /users</summary>
+
+_Response Example_
+
+```Status: 200 OK```
+```json
+{
+  "content": [
+    {
+      "id": 1,
+      "name": "Admin",
+      "login": "admin",
+      "email": "admin@alurabookstore.com"
+    },
+    {
+      "id": 5,
+      "name": "Gimli",
+      "login": "lockbearer",
+      "email": "dwarf@mail.com"
     }
+  ],
+  "pageable": {
+    "sort": {
+      "sorted": false,
+      "unsorted": true,
+      "empty": true
+    },
+    "offset": 0,
+    "pageNumber": 0,
+    "pageSize": 10,
+    "paged": true,
+    "unpaged": false
+  },
+  "totalPages": 1,
+  "totalElements": 2,
+  "last": true,
+  "sort": {
+    "sorted": false,
+    "unsorted": true,
+    "empty": true
+  },
+  "size": 10,
+  "number": 0,
+  "first": true,
+  "numberOfElements": 2,
+  "empty": false
+}
+```
+</details>
+
+<details>
+<summary><b>PUT</b> /users</summary>
+
+_Request Example_
+
+```json
+{
+  "id": 5,
+  "name": "Gimli",
+  "login": "lockbearer",
+  "email": "my_axe@mail.com",
+  "profilesId": [1, 2]
 }
 ```
 
-__Rules__
-
-```
-- All fields are mandatories; 
-- Title field has a 10 characters minimum size;
-- Publication Date field must not be a future date;
-- Pages field must be equal or greater than 100;
-- Author Id field must be from an already registered author.
-```
-
-# Get Books List
-
-__Request__
-
-```GET /books```
-
-__Response__
+_Response Example_
 
 ```Status: 200 OK```
 ```json
 {
-    "content": [
-        {
-            "id": 25,
-            "title": "Pride and Prejudice",
-            "publicationDate": "1813-01-28",
-            "pages": 408,
-            "author": {
-                "id": 20,
-                "name": "Jane Austen"
-            }
-        },
-        {
-            "id": 26,
-            "title": "The Hobbit",
-            "publicationDate": "1937-09-21",
-            "pages": 310,
-            "author": {
-                "id": 21,
-                "name": "John Ronald Reuel Tolkien"
-            }
-        },
-        {
-            "id": 27,
-            "title": "O Alienista",
-            "publicationDate": "1882-03-15",
-            "pages": 104,
-            "author": {
-                "id": 19,
-                "name": "Joaquim Maria Machado de Assis"
-            }
-        }
-    ],
-    "pageable": {
-        "sort": {
-            "sorted": false,
-            "unsorted": true,
-            "empty": true
-        },
-        "offset": 0,
-        "pageSize": 20,
-        "pageNumber": 0,
-        "unpaged": false,
-        "paged": true
+  "id": 5,
+  "name": "Gimli",
+  "login": "lockbearer",
+  "email": "my_axe@mail.com",
+  "profiles": [
+    {
+      "id": 1,
+      "name": "ROLE_ADMIN",
+      "authority": "ROLE_ADMIN"
     },
-    "last": true,
-    "totalPages": 1,
-    "totalElements": 3,
-    "size": 20,
-    "sort": {
-        "sorted": false,
-        "unsorted": true,
-        "empty": true
+    {
+      "id": 2,
+      "name": "ROLE_COMMON",
+      "authority": "ROLE_COMMON"
+    }
+  ]
+}
+```
+</details>
+
+<details>
+<summary><b>GET</b> /users/{id}</summary>
+
+_Response Example_
+
+```Status: 200 OK```
+```json
+{
+  "id": 5,
+  "name": "Gimli",
+  "login": "lockbearer",
+  "email": "my_axe@mail.com",
+  "profiles": [
+    {
+      "id": 1,
+      "name": "ROLE_ADMIN",
+      "authority": "ROLE_ADMIN"
     },
-    "first": true,
-    "numberOfElements": 3,
-    "number": 0,
-    "empty": false
+    {
+      "id": 2,
+      "name": "ROLE_COMMON",
+      "authority": "ROLE_COMMON"
+    }
+  ]
+}
+```
+</details>
+
+<details>
+<summary><b>DELETE</b> /users/{id}</summary>
+
+_Response Example_
+
+```Status: 204 No Content```
+</details>
+
+### Authors
+
+<details>
+<summary><b>POST</b> /authors</summary>
+
+_Request Example_
+
+```json
+{
+  "name": "John Ronald Reuel Tolkien",
+  "email": "tolkien@example.com",
+  "birthdate": "1892-01-03",
+  "miniResume": "An English writer, poet, philologist, and academic, best known as the author of the high fantasy works The Hobbit and The Lord of the Rings."
 }
 ```
 
-# Get Bookstore Report (Author Stats)
+_Response Example_
 
-__Request__
+```Status: 201 Created```
+```json
+{
+  "id": 2,
+  "name": "John Ronald Reuel Tolkien",
+  "email": "tolkien@example.com",
+  "birthdate": "1892-01-03",
+  "miniResume": "An English writer, poet, philologist, and academic, best known as the author of the high fantasy works The Hobbit and The Lord of the Rings."
+}
+```
+</details>
 
-```GET /reports/bookstore```
+<details>
+<summary><b>GET</b> /authors</summary>
 
-__Response__
+_Response Example_
+
+```Status: 200 OK```
+```json
+{
+  "content": [
+    {
+      "id": 2,
+      "name": "John Ronald Reuel Tolkien",
+      "email": "tolkien@example.com",
+      "birthdate": "1892-01-03",
+      "miniResume": "An English writer, poet, philologist, and academic, best known as the author of the high fantasy works The Hobbit and The Lord of the Rings."
+    },
+    {
+      "id": 3,
+      "name": "Joaquim Maria Machado de Assis",
+      "email": "machado@example.com",
+      "birthdate": "1839-06-21",
+      "miniResume": "A pioneer Brazilian novelist, poet, playwright and short story writer, widely regarded as the greatest writer of Brazilian literature."
+    }
+  ],
+  "pageable": {
+    "sort": {
+      "sorted": false,
+      "unsorted": true,
+      "empty": true
+    },
+    "offset": 0,
+    "pageNumber": 0,
+    "pageSize": 20,
+    "paged": true,
+    "unpaged": false
+  },
+  "totalPages": 1,
+  "totalElements": 2,
+  "last": true,
+  "sort": {
+    "sorted": false,
+    "unsorted": true,
+    "empty": true
+  },
+  "size": 20,
+  "number": 0,
+  "first": true,
+  "numberOfElements": 2,
+  "empty": false
+}
+```
+</details>
+
+<details>
+<summary><b>PUT</b> /authors</summary>
+
+_Request Example_
+
+```json
+{
+  "id": 3,
+  "name": "Machado de Assis",
+  "birthdate": "1839-06-21",
+  "email": "machado.assis@mail.com",
+  "miniResume": "A pioneer Brazilian novelist, poet, playwright and short story writer, widely regarded as the greatest writer of Brazilian literature."
+}
+```
+
+_Response Example_
+
+```Status: 200 OK```
+```json
+{
+  "id": 3,
+  "name": "Machado de Assis",
+  "email": "machado.assis@mail.com",
+  "birthdate": "1839-06-21",
+  "miniResume": "A pioneer Brazilian novelist, poet, playwright and short story writer, widely regarded as the greatest writer of Brazilian literature."
+}
+```
+</details>
+
+<details>
+<summary><b>GET</b> /authors/{id}</summary>
+
+_Response Example_
+
+```Status: 200 OK```
+```json
+{
+  "id": 3,
+  "name": "Machado de Assis",
+  "email": "machado.assis@mail.com",
+  "birthdate": "1839-06-21",
+  "miniResume": "A pioneer Brazilian novelist, poet, playwright and short story writer, widely regarded as the greatest writer of Brazilian literature."
+}
+```
+</details>
+
+<details>
+<summary><b>DELETE</b> /authors/{id}</summary>
+
+_Response Example_
+
+```Status: 204 No Content```
+</details>
+
+### Books
+
+<details>
+<summary><b>POST</b> /books</summary>
+
+_Request Example_
+
+```json
+{
+  "title": "Pride and Prejudice",
+  "publicationDate": "1813-01-28",
+  "pages": 408,
+  "authorId": 4
+}
+```
+
+_Response Example_
+
+```Status: 201 Created```
+```json
+{
+  "id": 2,
+  "title": "Pride and Prejudice",
+  "publicationDate": "1813-01-28",
+  "pages": 408,
+  "author": {
+    "id": 4,
+    "name": "Jane Austen"
+  }
+}
+```
+</details>
+
+<details>
+<summary><b>GET</b> /books</summary>
+
+_Response Example_
+
+```Status: 200 OK```
+```json
+{
+  "content": [
+    {
+      "id": 2,
+      "title": "Pride and Prejudice",
+      "publicationDate": "1813-01-28",
+      "pages": 408,
+      "author": {
+        "id": 4,
+        "name": "Jane Austen"
+      }
+    },
+    {
+      "id": 3,
+      "title": "The Hobbit",
+      "publicationDate": "1937-09-21",
+      "pages": 333,
+      "author": {
+        "id": 2,
+        "name": "John Ronald Reuel Tolkien"
+      }
+    }
+  ],
+  "pageable": {
+    "sort": {
+      "sorted": false,
+      "unsorted": true,
+      "empty": true
+    },
+    "offset": 0,
+    "pageNumber": 0,
+    "pageSize": 20,
+    "paged": true,
+    "unpaged": false
+  },
+  "totalPages": 1,
+  "totalElements": 2,
+  "last": true,
+  "sort": {
+    "sorted": false,
+    "unsorted": true,
+    "empty": true
+  },
+  "size": 20,
+  "number": 0,
+  "first": true,
+  "numberOfElements": 2,
+  "empty": false
+}
+```
+</details>
+
+<details>
+<summary><b>PUT</b> /books</summary>
+
+_Request Example_
+
+```json
+{
+  "id": 3,
+  "title": "The Hobbit",
+  "publicationDate": "1937-09-21",
+  "pages": 310,
+  "authorId": 2
+}
+```
+
+_Response Example_
+
+```Status: 200 OK```
+```json
+{
+  "id": 3,
+  "title": "The Hobbit",
+  "publicationDate": "1937-09-21",
+  "pages": 310,
+  "author": {
+    "id": 2,
+    "name": "John Ronald Reuel Tolkien"
+  }
+}
+```
+</details>
+
+<details>
+<summary><b>GET</b> /books/{id}</summary>
+
+_Response Example_
+
+```Status: 200 OK```
+```json
+{
+  "id": 3,
+  "title": "The Hobbit",
+  "publicationDate": "1937-09-21",
+  "pages": 310,
+  "author": {
+    "id": 2,
+    "name": "John Ronald Reuel Tolkien"
+  }
+}
+```
+</details>
+
+<details>
+<summary><b>DELETE</b> /books/{id}</summary>
+
+_Response Example_
+
+```Status: 204 No Content```
+</details>
+
+### Report
+
+<details>
+<summary><b>GET</b> /reports/bookstore</summary>
+
+_Response Example_
 
 ```Status: 200 OK```
 ```json
 [
-    {
-        "author": "Joaquim Maria Machado de Assis",
-        "totalBooks": 5,
-        "percentage": 45.45
-    },
-    {
-        "author": "Jane Austen",
-        "totalBooks": 3,
-        "percentage": 27.27
-    },
-    {
-        "author": "John Ronald Reuel Tolkien",
-        "totalBooks": 2,
-        "percentage": 18.18
-    },
-    {
-        "author": "Graciliano Ramos de Oliveira",
-        "totalBooks": 1,
-        "percentage": 9.09
-    }
+  {
+    "author": "John Ronald Reuel Tolkien",
+    "totalBooks": 2,
+    "percentage": 18.18
+  },
+  {
+    "author": "Machado de Assis",
+    "totalBooks": 5,
+    "percentage": 45.45
+  },
+  {
+    "author": "Jane Austen",
+    "totalBooks": 3,
+    "percentage": 27.27
+  },
+  {
+    "author": "Graciliano Ramos de Oliveira",
+    "totalBooks": 1,
+    "percentage": 9.09
+  }
 ]
 ```
+</details>
