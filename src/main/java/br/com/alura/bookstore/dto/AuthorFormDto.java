@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Getter
@@ -22,7 +19,7 @@ public class AuthorFormDto {
     private String name;
 
     @NotBlank
-    @Size(max = 50)
+    @Email
     private String email;
 
     @NotNull
