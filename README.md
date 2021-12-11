@@ -10,7 +10,6 @@ Project developed for the Java Bootcamp from [Alura](https://www.alura.com.br/).
 ![](https://img.shields.io/badge/Code-Java-informational?style=flat&logo=java&logoColor=white&color=2b8ebc)
 ![](https://img.shields.io/badge/Code-Spring_Boot-informational?style=flat&logo=spring&logoColor=white&color=2b8ebc)
 ![](https://img.shields.io/badge/Code-JUnit-informational?style=flat&logo=junit5&logoColor=white&color=2b8ebc)
-![](https://img.shields.io/badge/Code-JUnit-informational?style=flat&logo=mockito&logoColor=white&color=2b8ebc)
 
 ![](https://img.shields.io/badge/Tools-Maven-informational?style=flat&logo=apachemaven&logoColor=white&color=2b8ebc)
 ![](https://img.shields.io/badge/Tools-JWT-informational?style=flat&logo=jsonwebtokens&logoColor=white&color=2b8ebc)
