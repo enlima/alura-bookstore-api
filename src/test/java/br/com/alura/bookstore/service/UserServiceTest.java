@@ -144,6 +144,8 @@ class UserServiceTest {
 
         UserDetailsDto detailsDto = userService.update(formDto);
 
+        verify(emailService, times(1)).sendEmail(any(String.class), any(String.class), any(String.class));
+
         assertEquals(formDto.getId(), detailsDto.getId());
         assertEquals(formDto.getName(), detailsDto.getName());
         assertEquals(formDto.getLogin(), detailsDto.getLogin());

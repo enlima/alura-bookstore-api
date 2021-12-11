@@ -59,7 +59,7 @@ public class UserService {
                 + "\nLogin: %s"
                 + "\nPassword: %s", user.getName(), user.getLogin(), password);
 
-        emailService.sendEmail(user.getEmail(), "Welcome to Alura Bookstore!", message);
+        sendEmail(user.getEmail(), "Welcome to Alura Bookstore!", message);
 
         return modelMapper.map(user, UserDto.class);
     }
@@ -97,6 +97,14 @@ public class UserService {
 
         user.updateInfo(dto.getName(), dto.getLogin(), dto.getEmail(), profiles);
 
+        String message = String.format("Hello, %s!\n\n"
+                + "Your user info has been successfully updated!\n"
+                + "\nName: %s"
+                + "\nLogin: %s"
+                + "\nEmail: %s", user.getName(), user.getName(), user.getLogin(), user.getEmail());
+
+        sendEmail(user.getEmail(), "Alura Bookstore - User info has been updated", message);
+
         return modelMapper.map(user, UserDetailsDto.class);
     }
 
@@ -124,5 +132,9 @@ public class UserService {
     @Transactional
     public void delete(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public void sendEmail(String to, String subject, String message) {
+        emailService.sendEmail(to, subject, message);
     }
 }
